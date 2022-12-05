@@ -14,22 +14,31 @@ class SnakeGame < Gosu::Window
 
     @snake = Snake.new
     @fruit = Fruit.new
+    @font = Gosu::Font.new(20)
+    begin
+      @max_score = File.read('/home/andre/snake-game-ruby/score.txt')
+    rescue Errno::ENOENT
+      @max_score = '0'
+    end
   end
 
   def update
     if eat_fruit?
-        @fruit.regenerate
-        @snake.increase
+      @fruit.regenerate
+      @snake.increase
+      @snake.score += 1
     end
-    if @snake.self_colide?
-      reset_game
-    end
+
+    reset_game if @snake.self_colide?
+
     @snake.update
   end
 
   def draw
     @snake.draw
     @fruit.draw
+    @font.draw_text("Max Score: #{@max_score}", 10, 10, 0, 1.0, 1.0, Gosu::Color::RED)
+    @font.draw_text("Current Score: #{@snake.score}", 10, 30, 0, 1.0, 1.0, Gosu::Color::YELLOW)
   end
 
   def button_down(id)
@@ -42,14 +51,22 @@ class SnakeGame < Gosu::Window
     end
   end
 
-  private 
+  private
 
   def eat_fruit?
     @snake.x == @fruit.x && @snake.y == @fruit.y
   end
 
   def reset_game
+    write_max_score
+
     @snake = Snake.new
     @fruit = Fruit.new
+  end
+  
+  def write_max_score
+    return if @snake.score.zero?
+    @max_score = @snake.score
+    File.write('/home/andre/snake-game-ruby/score.txt', @snake.score)
   end
 end

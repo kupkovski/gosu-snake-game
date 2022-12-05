@@ -1,8 +1,9 @@
 require 'gosu'
 require_relative 'snake_game'
 
+# handles the Snake element
 class Snake
-  attr_accessor :x, :y
+  attr_accessor :x, :y, :score
 
   MIN_TAIL_SIZE = 3
 
@@ -15,6 +16,7 @@ class Snake
 
     @tail = MIN_TAIL_SIZE
     @position = []
+    @score = 0
   end
 
   def update
@@ -23,9 +25,9 @@ class Snake
 
     @x = 0 if @x > SnakeGame::WIDTH_IN_TILE
     @y = 0 if @y > SnakeGame::WIDTH_IN_TILE
-    
-    @x = SnakeGame::WIDTH_IN_TILE  if @x < 0
-    @y = SnakeGame::WIDTH_IN_TILE  if @y < 0
+
+    @x = SnakeGame::WIDTH_IN_TILE if @x.negative?
+    @y = SnakeGame::WIDTH_IN_TILE if @y.negative?
 
     @position << [@x, @y]
     @position.shift until @position.size <= @tail
@@ -49,9 +51,10 @@ class Snake
 
   def self_colide?
     return false if @position.empty?
+
     head = @position[0]
     tail = @position[1..]
-    tail && tail.include?(head)
+    tail&.include?(head)
   end
 
   def up;    @vel_x =  0; @vel_y = -1;  end

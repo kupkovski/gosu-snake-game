@@ -1,16 +1,16 @@
 require 'gosu'
 require_relative 'snake_game'
 
+# handles the Fruit (the object that the snake catches)
 class Fruit
-    attr_accessor :x, :y
+  attr_accessor :x, :y
 
   def initialize
     @x = 15
     @y = 15
   end
 
-  def update
-  end
+  def update; end
 
   def draw
     Gosu.draw_rect(
