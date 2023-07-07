@@ -29,7 +29,7 @@ class SnakeGame < Gosu::Window
       @snake.score += 1
     end
 
-    reset_game if @snake.self_colide?
+    reset_game if @snake.self_colide? || @snake.touches_borders?
 
     @snake.update
   end
@@ -63,7 +63,7 @@ class SnakeGame < Gosu::Window
     @snake = Snake.new
     @fruit = Fruit.new
   end
-  
+
   def write_max_score
     return if @snake.score.zero?
     @max_score = @snake.score

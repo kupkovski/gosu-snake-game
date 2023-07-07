@@ -22,13 +22,6 @@ class Snake
   def update
     @x += @vel_x
     @y += @vel_y
-
-    @x = 0 if @x > SnakeGame::WIDTH_IN_TILE
-    @y = 0 if @y > SnakeGame::WIDTH_IN_TILE
-
-    @x = SnakeGame::WIDTH_IN_TILE if @x.negative?
-    @y = SnakeGame::WIDTH_IN_TILE if @y.negative?
-
     @position << [@x, @y]
     @position.shift until @position.size <= @tail
   end
@@ -57,8 +50,35 @@ class Snake
     tail&.include?(head)
   end
 
-  def up;    @vel_x =  0; @vel_y = -1;  end
-  def down;  @vel_x =  0; @vel_y =  1;  end
-  def left;  @vel_x = -1; @vel_y =  0;  end
-  def right; @vel_x =  1; @vel_y =  0;  end
+  def touches_borders?
+    @x >= SnakeGame::WIDTH_IN_TILE || @y >= SnakeGame::WIDTH_IN_TILE || @x.negative? || @y.negative?
+  end
+
+  def up
+    return unless @vel_y.zero?
+
+    @vel_x =  0
+    @vel_y = -1
+  end
+
+  def down
+    return unless @vel_y.zero?
+
+    @vel_x =  0
+    @vel_y =  1
+  end
+
+  def left
+    return unless @vel_x.zero?
+
+    @vel_x = -1
+    @vel_y =  0
+  end
+
+  def right
+    return unless @vel_x.zero?
+
+    @vel_x =  1
+    @vel_y =  0
+  end
 end
